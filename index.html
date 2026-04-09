@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Electrician Pro - المقاول الكهربائي الذكي</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffc107">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Electrician Pro">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffc107;
+            --primary-dark: #ff9800;
+            --secondary: #00bcd4;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --info: #2196f3;
+            --purple: #9c27b0;
+            --dark-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .circuit-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,193,7,0.15), transparent);
+            animation: pulse-line 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-line {
+            0%, 100% { opacity: 0.3; transform: scaleX(1); }
+            50% { opacity: 0.7; transform: scaleX(1.02); }
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, rgba(15,23,42,0.98) 0%, rgba(30,41,59,0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(255,193,7,0.3);
+            padding: 12px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(255,193,7,0.4);
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-pulse {
+            from { box-shadow: 0 4px 15px rgba(255,193,7,0.4); }
+            to { box-shadow: 0 4px 25px rgba(255,193,7,0.6); }
+        }
+
+        .app-title {
+            font-size: 1.2em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, #fff 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .app-subtitle {
+            font-size: 0.7em;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-header {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--dark-bg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 6px 12px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4em;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            top: 68px;
+            right: 0;
+            width: 280px;
+            height: calc(100vh - 68px);
+            background: rgba(15,23,42,0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255,255,255,0.08);
+            padding: 15px 10px;
+            overflow-y: auto;
+            z-index: 999;
+            transition: transform 0.3s ease;
+            transform: translateX(100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-section-title {
+            font-size: 0.7em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0 10px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.92em;
+        }
+
+        .nav-item:active {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(255,193,7,0.2) 0%, rgba(255,152,0,0.1) 100%);
+            color: var(--primary);
+            border: 1px solid rgba(255,193,7,0.3);
+        }
+
+        .nav-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .nav-badge {
+            margin-right: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.65em;
+            padding: 2px 7px;
+            border-radius: 8px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            padding: 80px 16px 20px;
+            min-height: 100vh;
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 18px 15px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 3px;
+        }
+
+        .stat-card.home::before { background: linear-gradient(90deg, #4caf50, #81c784); }
+        .stat-card.solar::before { background: linear-gradient(90deg, #ffc107, #ffb74d); }
+        .stat-card.business::before { background: linear-gradient(90deg, #2196f3, #64b5f6); }
+        .stat-card.profit::before { background: linear-gradient(90deg, #9c27b0, #ce93d8); }
+
+        .stat-card:active {
+            transform: scale(0.97);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card.home .stat-icon { background: rgba(76,175,80,0.15); }
+        .stat-card.solar .stat-icon { background: rgba(255,193,7,0.15); }
+        .stat-card.business .stat-icon { background: rgba(33,150,243,0.15); }
+        .stat-card.profit .stat-icon { background: rgba(156,39,176,0.15); }
+
+        .stat-title {
+            font-size: 0.82em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: 900;
+        }
+
+        .stat-card.home .stat-value { color: #4caf50; }
+        .stat-card.solar .stat-value { color: #ffc107; }
+        .stat-card.business .stat-value { color: #2196f3; }
+        .stat-card.profit .stat-value { color: #ce93d8; }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title-group h2 {
+            font-size: 1.35em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.82em;
+            margin-top: 4px;
+        }
+
+        /* Panel/Card */
+        .panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .panel-title {
+            font-size: 1em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Symbols Grid */
+        .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .symbol-item {
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .symbol-item:active {
+            border-color: var(--primary);
+            background: rgba(255,193,7,0.15);
+            transform: scale(0.95);
+        }
+
+        .symbol-icon-lg {
+            font-size: 2em;
+            margin-bottom: 6px;
+        }
+
+        .symbol-name {
+            font-size: 0.78em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .symbol-name-en {
+            font-size: 0.65em;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Drawing Area */
+        .drawing-area {
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed rgba(255,255,255,0.15);
+            border-radius: 14px;
+            min-height: 280px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drawing-area-header {
+            background: rgba(0,0,0,0.25);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.85em;
+        }
+
+        .canvas-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100% - 45px);
+            color: var(--text-secondary);
+            font-size: 0.88em;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* AI Panel */
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(0,188,212,0.1) 0%, rgba(33,150,243,0.05) 100%);
+            border: 2px solid rgba(0,188,212,0.3);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .ai-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--info) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 18px;
+            background: rgba(76,175,80,0.1);
+            border-radius: 12px;
+            margin-top: 14px;
+        }
+
+        .score-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 87%, rgba(255,255,255,0.1) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '87%';
+            position: absolute;
+            width: 72px;
+            height: 72px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 900;
+            color: #4caf50;
+        }
+
+        .score-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #4caf50;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.82em;
+            margin-top: 8px;
+        }
+
+        /* Danger Cards */
+        .danger-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .danger-card {
+            background: rgba(244,67,54,0.1);
+            border: 1.5px solid rgba(244,67,54,0.3);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .danger-icon {
+            font-size: 1.6em;
+            color: #f44336;
+        }
+
+        .danger-text h4 {
+            color: #ef5350;
+            font-size: 0.92em;
+            margin-bottom: 4px;
+        }
+
+        .danger-text p {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* Connection Types */
+        .connection-diagram {
+            background: rgba(33,150,243,0.08);
+            border: 2px solid rgba(33,150,243,0.25);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .connection-types {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .conn-type {
+            background: rgba(33,150,243,0.15);
+            border: 2px solid rgba(33,150,243,0.3);
+            border-radius: 12px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .conn-type.active {
+            background: rgba(33,150,243,0.28);
+            border-color: var(--info);
+        }
+
+        .conn-type i {
+            font-size: 1.6em;
+            color: var(--info);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .conn-type span {
+            font-weight: 600;
+            font-size: 0.82em;
+        }
+
+        /* Supplies Grid */
+        .supplies-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .supply-card {
+            background: rgba(255,193,7,0.08);
+            border: 1.5px solid rgba(255,193,7,0.2);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .supply-img {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6em;
+            margin: 0 auto 8px;
+        }
+
+        .supply-name-ar {
+            font-weight: 700;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        .supply-name-en {
+            font-size: 0.68em;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Brand Chips */
+        .inverter-brands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .brand-chip {
+            background: rgba(156,39,176,0.15);
+            border: 1.5px solid rgba(156,39,176,0.35);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.82em;
+            cursor: pointer;
+        }
+
+        .brand-chip.active {
+            background: rgba(156,39,176,0.32);
+        }
+
+        /* Settings Cards */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .setting-card {
+            background: rgba(33,150,243,0.08);
+            border: 1.5px solid rgba(33,150,243,0.2);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .setting-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .setting-input, .setting-select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.3);
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.88em;
+        }
+
+        .setting-input:focus, .setting-select:focus {
+            outline: none;
+            border-color: var(--info);
+        }
+
+        /* Projects List */
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-status {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .status-progress { background: rgba(33,150,243,0.2); }
+        .status-complete { background: rgba(76,175,80,0.2); }
+
+        .project-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .project-name {
+            font-size: 0.95em;
+            font-weight: 700;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-client {
+            font-size: 0.78em;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-container {
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .progress-label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--info), var(--secondary));
+            border-radius: 4px;
+        }
+
+        /* Points Table */
+        .points-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .points-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82em;
+        }
+
+        .points-table th,
+        .points-table td {
+            padding: 10px 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .points-table th {
+            background: rgba(255,193,7,0.15);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+
+        .table-input {
+            width: 60px;
+            padding: 7px 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9em;
+        }
+
+        .total-row {
+            background: rgba(255,193,7,0.1);
+            font-weight: 700;
+        }
+
+        .total-row td {
+            color: var(--primary);
+        }
+
+        /* Finance Cards */
+        .finance-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .finance-card {
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .finance-card.expenses {
+            background: linear-gradient(135deg, rgba(244,67,54,0.12) 0%, rgba(198,40,40,0.06) 100%);
+            border: 2px solid rgba(244,67,54,0.3);
+        }
+
+        .finance-card.income {
+            background: linear-gradient(135deg, rgba(76,175,80,0.12) 0%, rgba(56,142,60,0.06) 100%);
+            border: 2px solid rgba(76,175,80,0.3);
+        }
+
+        .finance-card.profit {
+            background: linear-gradient(135deg, rgba(255,193,7,0.15) 0%, rgba(255,152,0,0.08) 100%);
+            border: 2px solid rgba(255,193,7,0.4);
+        }
+
+        .finance-icon {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .finance-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .finance-amount {
+            font-size: 1.7em;
+            font-weight: 900;
+        }
+
+        .finance-card.expenses .finance-amount { color: #ef5350; }
+        .finance-card.income .finance-amount { color: #66bb6a; }
+        .finance-card.profit .finance-amount { color: #ffc107; }
+
+        .finance-formula {
+            background: rgba(0,0,0,0.25);
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+            direction: ltr;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        /* Smart Notes */
+        .smart-notes {
+            background: linear-gradient(135deg, rgba(0,188,212,0.12) 0%, rgba(0,151,167,0.06) 100%);
+            border: 2px solid rgba(0,188,212,0.35);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .notes-list {
+            list-style: none;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(0,188,212,0.08);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .note-icon {
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .note-text {
+            font-size: 0.84em;
+            line-height: 1.45;
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-info { background: var(--info); color: white; }
+        .btn-warning { background: var(--warning); color: var(--dark-bg); }
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-primary { background: var(--primary); color: var(--dark-bg); }
+        .btn-outline { 
+            background: transparent; 
+            border: 2px solid rgba(255,255,255,0.2); 
+            color: white; 
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 0.78em;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+        }
+
+        .filter-tabs::-webkit-scrollbar { display: none; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--dark-bg);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.15);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .modal-title {
+            font-size: 1.15em;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.82em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9em;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--info);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+            font-size: 0.85em;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Quick Actions Row */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+        /* Responsive for larger screens */
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+                position: fixed;
+                top: 68px;
+                right: 0;
+            }
+            
+            .main-content {
+                margin-right: 280px;
+                padding-right: 30px;
+                padding-left: 30px;
+            }
+
+            .mobile-toggle { display: none; }
+
+            .symbols-grid { grid-template-columns: repeat(4, 1fr); }
+            .supplies-grid { grid-template-columns: repeat(4, 1fr); }
+            .settings-grid { grid-template-columns: repeat(2, 1fr); }
+            .finance-grid { grid-template-columns: repeat(3, 1fr); }
+            .dashboard-grid { grid-template-columns: repeat(4, 1fr); }
+            .danger-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo-section">
+            <div class="logo-icon">⚡</div>
+            <div>
+                <div class="app-title">Electrician Pro</div>
+                <span class="app-subtitle">المقاول الكهربائي الذكي</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-header btn-primary" onclick="openModal('newProject')">
+                <i class="fas fa-plus"></i> جديد
+            </button>
+            <button class="mobile-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="nav-section">
+            <div class="nav-section-title">الرئيسية</div>
+            <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+                <i class="fas fa-home"></i> لوحة التحكم
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><i class="fas fa-bolt" style="color:#4caf50"></i> كهرباء منزلية</div>
+            <div class="nav-item" data-page="planning" onclick="showPage('planning')">
+                <i class="fas fa-drafting-compass"></i> التخطيط
+            </div>
+            <div class="nav-item" data-page="analysis" onclick="showPage('analysis')">
+                <i class="fas fa-robot"></i> التحليل الذكي
+                <span class="nav-badge">AI</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><i class="fas fa-sun" style="color:#ffc107"></i> طاقة شمسية</div>
+            <div class="nav-item" data-page="solar-tips" onclick="showPage('solar-tips')">
+                <i class="fas fa-exclamation-triangle"></i> نصائح وأخطار
+            </div>
+            <div class="nav-item" data-page="solar-install" onclick="showPage('solar-install')">
+                <i class="fas fa-plug"></i> تركيب ومستلزمات
+            </div>
+            <div class="nav-item" data-page="solar-programming" onclick="showPage('solar-programming')">
+                <i class="fas fa-cogs"></i> برمجة إنفرتر
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title"><i class="fas fa-briefcase" style="color:#2196f3"></i> مدير أعمالي</div>
+            <div class="nav-item" data-page="projects" onclick="showPage('projects')">
+                <i class="fas fa-tasks"></i> أعمالي
+            </div>
+            <div class="nav-item" data-page="points" onclick="showPage('points')">
+                <i class="fas fa-calculator"></i> نقاطي
+            </div>
+            <div class="nav-item" data-page="finance" onclick="showPage('finance')">
+                <i class="fas fa-wallet"></i> الحسابات
+            </div>
+            <div class="nav-item" data-page="notes" onclick="showPage('notes')">
+                <i class="fas fa-lightbulb"></i> ملاحظات ذكية
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <section id="page-dashboard" class="page-section active">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-tachometer-alt" style="color:var(--primary)"></i> لوحة التحكم</h2>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card home" onclick="showPage('planning')">
+                    <div class="stat-icon">🏠</div>
+                    <div class="stat-title">مشاريع كهربائية</div>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-card solar" onclick="showPage('solar-install')">
+                    <div class="stat-icon">☀️</div>
+                    <div class="stat-title">أنظمة شمسية</div>
+                    <div class="stat-value">7</div>
+                </div>
+                <div class="stat-card business" onclick="showPage('projects')">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-title">إجمالي النقاط</div>
+                    <div class="stat-value">2,450</div>
+                </div>
+                <div class="stat-card profit" onclick="showPage('finance')">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-title">الأرباح</div>
+                    <div class="stat-value">45.8K</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-bolt" style="color:var(--primary)"></i> إجراءات سريعة</h3>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-success btn-sm" onclick="showPage('planning')"><i class="fas fa-plus"></i> مخطط</button>
+                    <button class="btn btn-warning btn-sm" onclick="showPage('analysis')"><i class="fas fa-robot"></i> تحليل</button>
+                    <button class="btn btn-info btn-sm" onclick="showPage('solar-programming')"><i class="fas fa-cogs"></i> برمجة</button>
+                    <button class="btn btn-purple btn-sm" onclick="openModal('addExpense')"><i class="fas fa-money-bill"></i> مصروف</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-clock" style="color:var(--secondary)"></i> آخر المشاريع</h3>
+                    <button class="btn btn-sm btn-outline" onclick="showPage('projects')">الكل</button>
+                </div>
+                <div class="projects-list">
+                    <div class="project-card">
+                        <div class="project-status status-progress">🏗️</div>
+                        <div class="project-info">
+                            <div class="project-name">فيلا الأستاذ أحمد</div>
+                            <div class="project-client">أحمد محمد | كهرباء منزلية</div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-label">65%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-status status-complete">✅</div>
+                        <div class="project-info">
+                            <div class="project-name">شقة السيدة فاطمة</div>
+                            <div class="project-client">فاطمة علي | تم التسليم</div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-label">100%</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#4caf50"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PLANNING ==================== -->
+        <section id="page-planning" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-drafting-compass" style="color:#4caf50"></i> التخطيط والرسم</h2>
+                    <p class="section-subtitle">ارسم مخططك الكهربائي بالرموز الجاهزة</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-shapes" style="color:var(--primary)"></i> الرموز الكهربائية</h3>
+                </div>
+                <div class="symbols-grid">
+                    <div class="symbol-item" onclick="addToCanvas('💡','إنارة')">
+                        <div class="symbol-icon-lg">💡</div>
+                        <div class="symbol-name">إنارة</div>
+                        <div class="symbol-name-en">Light</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('🔘','مفتاح')">
+                        <div class="symbol-icon-lg">🔘</div>
+                        <div class="symbol-name">مفتاح</div>
+                        <div class="symbol-name-en">Switch</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('🔌','مقبس')">
+                        <div class="symbol-icon-lg">🔌</div>
+                        <div class="symbol-name">مقبس</div>
+                        <div class="symbol-name-en">Socket</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('⚡','لوحة تحكم')">
+                        <div class="symbol-icon-lg">⚡</div>
+                        <div class="symbol-name">لوحة تحكم</div>
+                        <div class="symbol-name-en">DB</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('❄️','مكيف')">
+                        <div class="symbol-icon-lg">❄️</div>
+                        <div class="symbol-name">مكيف</div>
+                        <div class="symbol-name-en">AC</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('🔥','سخان')">
+                        <div class="symbol-icon-lg">🔥</div>
+                        <div class="symbol-name">سخان مياه</div>
+                        <div class="symbol-name-en">Heater</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('📺','TV')">
+                        <div class="symbol-icon-lg">📺</div>
+                        <div class="symbol-name">تلفزيون</div>
+                        <div class="symbol-name-en">TV Point</div>
+                    </div>
+                    <div class="symbol-item" onclick="addToCanvas('🌐','شبكة')">
+                        <div class="symbol-icon-lg">🌐</div>
+                        <div class="symbol-name">شبكة</div>
+                        <div class="symbol-name-en">Network</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drawing-area">
+                <div class="drawing-area-header">
+                    <strong>منطقة الرسم</strong>
+                    <span style="font-size:0.78em;color:var(--text-secondary)">اضغط على رمز لإضافته</span>
+                </div>
+                <div class="canvas-placeholder" id="canvasArea">
+                    <div>
+                        <i class="fas fa-mouse-pointer" style="font-size:3em;margin-bottom:12px;opacity:0.3;display:block"></i>
+                        <p>اضغط على أي رمز أعلاه لإضافته هنا</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== ANALYSIS ==================== -->
+        <section id="page-analysis" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-robot" style="color:var(--secondary)"></i> التحليل الذكي</h2>
+                    <p class="section-subtitle">احصل على تقييم احترافي لمخططك</p>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="runAnalysis()"><i class="fas fa-play"></i> تحليل</button>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-upload" style="color:var(--info)"></i> رفع المخطط</h3>
+                </div>
+                <div class="drawing-area" style="min-height:200px;">
+                    <div class="canvas-placeholder" onclick="document.getElementById('analysisFile').click()" style="cursor:pointer">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:2.5em;margin-bottom:10px;opacity:0.4;display:block"></i>
+                        <p>اضغط لرفع صورة المخطط</p>
+                        <input type="file" id="analysisFile" accept="image/*" onchange="handleAnalysisUpload(event)" style="display:none">
+                    </div>
+                </div>
+                
+                <div id="analysisResults" style="display:none;margin-top:14px;">
+                    <h4 style="color:var(--primary);font-size:0.95em;margin-bottom:10px;"><i class="fas fa-check-circle"></i> نتائج التحليل:</h4>
+                    <div style="background:rgba(76,175,80,0.1);border-radius:10px;padding:12px;margin-bottom:8px;border-right:3px solid #4caf50;">
+                        <strong style="color:#81c784;font-size:0.85em;">✓ توافق المعايير:</strong>
+                        <p style="font-size:0.8em;color:var(--text-secondary);margin-top:4px;">يتوافق مع IEC/NEMA</p>
+                    </div>
+                    <div style="background:rgba(255,193,7,0.1);border-radius:10px;padding:12px;border-right:3px solid #ffc107;">
+                        <strong style="color:#ffc107;font-size:0.85em;">⚠ اقتراح:</strong>
+                        <p style="font-size:0.8em;color:var(--text-secondary);margin-top:4px;">أضف قاطع 32A للمكيفات</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ai-panel">
+                <div class="ai-header">
+                    <div class="ai-avatar">🤖</div>
+                    <div>
+                        <h3 style="color:var(--secondary);font-size:0.95em;">مساعد AI</h3>
+                        <p style="font-size:0.75em;color:var(--text-secondary);">جاهز للتحليل</p>
+                    </div>
+                </div>
+                <div class="score-display">
+                    <div class="score-circle"></div>
+                    <div style="font-size:0.82em;color:var(--text-secondary);">نسبة النجاح المتوقعة</div>
+                    <div class="score-status"><i class="fas fa-check-circle"></i> ممتاز!</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SOLAR TIPS ==================== -->
+        <section id="page-solar-tips" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> نصائح السلامة</h2>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-skull-crossbones" style="color:var(--danger)"></i> أخطار التركيب</h3>
+                </div>
+                <div class="danger-grid">
+                    <div class="danger-card">
+                        <div class="danger-icon">⚡</div>
+                        <div class="danger-text">
+                            <h4>الصدمة DC</h4>
+                            <p>تيار المستمر خطير جداً ولا ينفصل بسهولة</p>
+                        </div>
+                    </div>
+                    <div class="danger-card">
+                        <div class="danger-icon">🧗</div>
+                        <div class="danger-text">
+                            <h4>خطر السقوط</h4>
+                            <p>ارتدِ حزام أمان دائماً على الأسطح</p>
+                        </div>
+                    </div>
+                    <div class="danger-card">
+                        <div class="danger-icon">🔥</div>
+                        <div class="danger-text">
+                            <h4>حرائق القوس</h4>
+                            <p>الألواح لا تتوقف عن توليد الكهرباء!</p>
+                        </div>
+                    </div>
+                    <div class="danger-card">
+                        <div class="danger-icon">☀️</div>
+                        <div class="danger-text">
+                            <h4>حرارة الشمس</h4>
+                            <p>اعمل في الصباح الباكر أو المساء</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SOLAR INSTALL ==================== -->
+        <section id="page-solar-install" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-plug" style="color:var(--info)"></i> التركيب والمستلزمات</h2>
+                </div>
+            </div>
+
+            <div class="connection-diagram panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-project-diagram" style="color:var(--info)"></i> أنواع التوصيل</h3>
+                </div>
+                <div class="connection-types">
+                    <div class="conn-type active" onclick="selectConn(this)">
+                        <i class="fas fa-long-arrow-alt-right"></i>
+                        <span>توالي</span>
+                    </div>
+                    <div class="conn-type" onclick="selectConn(this)">
+                        <i class="fas fa-arrows-alt-v"></i>
+                        <span>توازي</span>
+                    </div>
+                    <div class="conn-type" onclick="selectConn(this)">
+                        <i class="fas fa-random"></i>
+                        <span>مركب</span>
+                    </div>
+                </div>
+                <div style="background:rgba(156,39,176,0.1);border:2px solid rgba(156,39,176,0.3);border-radius:12px;padding:14px;margin-top:14px;text-align:right;">
+                    <span style="font-size:1.8em;">🤖</span>
+                    <strong style="color:#ce93d8;font-size:0.9em;"> اقتراح AI:</strong>
+                    <p style="font-size:0.82em;color:var(--text-secondary);margin-top:4px;">نوصي بتوصيل مركب Hybrid مع 12 لوحة 450W</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-boxes" style="color:var(--primary)"></i> المستلزمات</h3>
+                </div>
+                <div class="supplies-grid">
+                    <div class="supply-card"><div class="supply-img">☀️</div><div class="supply-name-ar">ألواح شمسية</div><div class="supply-name-en">PV Panels</div></div>
+                    <div class="supply-card"><div class="supply-img">⚡</div><div class="supply-name-ar">إنفرتر</div><div class="supply-name-en">Inverter</div></div>
+                    <div class="supply-card"><div class="supply-img">🔋</div><div class="supply-name-ar">بطاريات</div><div class="supply-name-en">Batteries</div></div>
+                    <div class="supply-card"><div class="supply-img">🔗</div><div class="supply-name-ar">كابلات MC4</div><div class="supply-name-en">Solar Cables</div></div>
+                    <div class="supply-card"><div class="supply-img">🛡️</div><div class="supply-name-ar">وحدات حماية</div><div class="supply-name-en">Protection</div></div>
+                    <div class="supply-card"><div class="supply-img">🏗️</div><div class="supply-name-ar">هياكل معدنية</div><div class="supply-name-en">Mounting</div></div>
+                    <div class="supply-card"><div class="supply-img">📊</div><div class="supply-name-ar">جهاز تحكم</div><div class="supply-name-en">Controller</div></div>
+                    <div class="supply-card"><div class="supply-img">🌡️</div><div class="supply-name-ar">حساسات حرارة</div><div class="supply-name-en">Sensors</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SOLAR PROGRAMMING ==================== -->
+        <section id="page-solar-programming" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-cogs" style="color:var(--purple)"></i> برمجة الإنفرتر</h2>
+                </div>
+                <button class="btn btn-purple btn-sm"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-microchip" style="color:var(--purple)"></i> اختر الإنفرتر</h3>
+                </div>
+                <div class="inverter-brands">
+                    <span class="brand-chip active" onclick="selectBrand(this)">SMA</span>
+                    <span class="brand-chip" onclick="selectBrand(this)">Fronius</span>
+                    <span class="brand-chip" onclick="selectBrand(this)">Huawei</span>
+                    <span class="brand-chip" onclick="selectBrand(this)">Growatt</span>
+                    <span class="brand-chip" onclick="selectBrand(this)">Victron</span>
+                    <span class="brand-chip" onclick="selectBrand(this)">Solis</span>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <div class="setting-card">
+                    <div class="setting-header"><i class="fas fa-plug" style="color:var(--info)"></i><strong>وضع التشغيل</strong></div>
+                    <select class="setting-select">
+                        <option>Grid-Tied (متصل)</option>
+                        <option>Off-Grid (منفصل)</option>
+                        <option>Hybrid (مختلط)</option>
+                    </select>
+                </div>
+                <div class="setting-card">
+                    <div class="setting-header"><i class="fas fa-battery-half" style="color:var(--success)"></i><strong>جهد الشحن</strong></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">Bulk</label><input type="number" class="setting-input" value="57.6" step="0.1"></div>
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">Absorption</label><input type="number" class="setting-input" value="57.2" step="0.1"></div>
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">Float</label><input type="number" class="setting-input" value="54.4" step="0.1"></div>
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">Equalization</label><input type="number" class="setting-input" value="58.8" step="0.1"></div>
+                    </div>
+                </div>
+                <div class="setting-card">
+                    <div class="setting-header"><i class="fas fa-clock" style="color:var(--warning)"></i><strong>جدولة التصدير</strong></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">بداية</label><input type="time" class="setting-input" value="07:00"></div>
+                        <div><label style="font-size:0.72em;color:var(--text-secondary);">نهاية</label><input type="time" class="setting-input" value="18:00"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PROJECTS ==================== -->
+        <section id="page-projects" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-tasks" style="color:var(--info)"></i> أعمالي</h2>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="openModal('newProject')"><i class="fas fa-plus"></i> مشروع جديد</button>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="btn btn-sm btn-primary" onclick="filterProj('all')">الكل (5)</button>
+                <button class="btn btn-sm btn-outline" onclick="filterProj('active')">نشط (3)</button>
+                <button class="btn btn-sm btn-outline" onclick="filterProj('complete')">مكتمل (2)</button>
+            </div>
+
+            <div class="projects-list">
+                <div class="project-card">
+                    <div class="project-status status-progress">🏗️</div>
+                    <div class="project-info">
+                        <div class="project-name">فيلا الأستاذ أحمد - الحي الجنوبي</div>
+                        <div class="project-client">أحمد محمد | كهرباء | 2024/01/15</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">65%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-status status-progress">☀️</div>
+                    <div class="project-info">
+                        <div class="project-name">نظام شمسي - شركة النور</div>
+                        <div class="project-client">شركة النور | شمسي 10kW | 2024/01/20</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">40%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-status status-progress">🏠</div>
+                    <div class="project-info">
+                        <div class="project-name">شقة خالد - مجمع الورود</div>
+                        <div class="project-client">خالد عبدالله | كهرباء | 2024/01/22</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">25%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-status status-complete">✅</div>
+                    <div class="project-info">
+                        <div class="project-name">شقة فاطمة - مجمع النخيل</div>
+                        <div class="project-client">فاطمة علي | تم 2024/01/10</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">100%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#4caf50"></div></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-status status-complete">✅</div>
+                    <div class="project-info">
+                        <div class="project-name">نظام شمسي - بيت العائلة</div>
+                        <div class="project-client">سعود العتيبي | تم 2024/01/05</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">100%</div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:100%;background:#4caf50"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== POINTS ==================== -->
+        <section id="page-points" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-calculator" style="color:var(--primary)"></i> حساب النقاط</h2>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="calcTotal()"><i class="fas fa-calculator"></i> حساب</button>
+            </div>
+
+            <div class="panel" style="background:linear-gradient(135deg,rgba(255,193,7,0.1),rgba(255,152,0,0.05));border-color:rgba(255,193,7,0.3);">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <i class="fas fa-tag" style="color:var(--primary)"></i>
+                        <span style="font-size:0.85em;font-weight:600;">سعر النقطة:</span>
+                        <input type="number" id="pointPrice" value="10" class="table-input" style="width:70px;" onchange="calcTotal()">
+                        <span style="font-size:0.78em;color:var(--text-secondary);">ر.س</span>
+                    </div>
+                    <div style="font-size:1.15em;font-weight:900;color:var(--primary);">
+                        الإجمالي: <span id="grandTotal">1,660</span> ر.س
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="points-table-wrapper">
+                    <table class="points-table">
+                        <thead>
+                            <tr><th>#</th><th>العنصر</th><th>الكمية</th><th>نقاط</th><th>السعر</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>🔌 مقابس/أفاش</td><td><input type="number" class="table-input" value="45" onchange="calcTotal()"></td><td id="p1">45</td><td id="pr1">450 ر.س</td></tr>
+                            <tr><td>2</td><td>🔘 مفاتيح</td><td><input type="number" class="table-input" value="30" onchange="calcTotal()"></td><td id="p2">30</td><td id="pr2">300 ر.س</td></tr>
+                            <tr><td>3</td><td>💡 إنارة</td><td><input type="number" class="table-input" value="20" onchange="calcTotal()"></td><td id="p3">20</td><td id="pr3">200 ر.س</td></tr>
+                            <tr><td>4</td><td>⚡ لوحات تحكم</td><td><input type="number" class="table-input" value="5" onchange="calcTotal()"></td><td id="p4">25</td><td id="pr4">250 ر.س</td></tr>
+                            <tr><td>5</td><td>❄️ مكيفات</td><td><input type="number" class="table-input" value="4" onchange="calcTotal()"></td><td id="p5">20</td><td id="pr5">200 ر.س</td></tr>
+                            <tr><td>6</td><td>🔥 سخانات</td><td><input type="number" class="table-input" value="2" onchange="calcTotal()"></td><td id="p6">10</td><td id="pr6">100 ر.س</td></tr>
+                            <tr><td>7</td><td>📺 TV/Network</td><td><input type="number" class="table-input" value="8" onchange="calcTotal()"></td><td id="p7">16</td><td id="pr7">160 ر.س</td></tr>
+                            <tr class="total-row"><td colspan="3"><strong>الإجمالي</strong></td><td id="tp"><strong>166</strong></td><td id="tpr"><strong>1,660 ر.س</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== FINANCE ==================== -->
+        <section id="page-finance" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-wallet" style="color:var(--success)"></i> الحسابات المالية</h2>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="openModal('addExpense')"><i class="fas fa-plus"></i> مصروف</button>
+            </div>
+
+            <div class="finance-grid">
+                <div class="finance-card expenses">
+                    <div class="finance-icon">💸</div>
+                    <div class="finance-label">المصروفات</div>
+                    <div class="finance-amount">12,350 ر.س</div>
+                </div>
+                <div class="finance-card income">
+                    <div class="finance-icon">📥</div>
+                    <div class="finance-label">المستلمة</div>
+                    <div class="finance-amount">58,150 ر.س</div>
+                </div>
+                <div class="finance-card profit">
+                    <div class="finance-icon">📊</div>
+                    <div class="finance-label">صافي الربح</div>
+                    <div class="finance-amount">45,800 ر.س</div>
+                </div>
+            </div>
+
+            <div class="finance-formula">
+                <i class="fas fa-calculator" style="margin-left:8px"></i>
+                (النقاط × سعر النقطة) − المصروفات = صافي الربح
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-history" style="color:var(--info)"></i> آخر العمليات</h3>
+                </div>
+                <div class="points-table-wrapper">
+                    <table class="points-table">
+                        <thead><tr><th>التاريخ</th><th>البيان</th><th>النوع</th><th>المبلغ</th></tr></thead>
+                        <tbody>
+                            <tr><td>25/01</td><td>دفعة فيلا أحمد</td><td><span style="color:#4caf50;background:rgba(76,175,80,0.15);padding:3px 10px;border-radius:12px;font-size:0.75em;">مستلمة</span></td><td style="color:#4caf50;font-weight:600;">+15,000</td></tr>
+                            <tr><td>24/01</td><td>شراء كابلات</td><td><span style="color:#f44336;background:rgba(244,67,54,0.15);padding:3px 10px;border-radius:12px;font-size:0.75em;">مصروف</span></td><td style="color:#f44336;font-weight:600;">−2,850</td></tr>
+                            <tr><td>23/01</td><td>أجور عمالة</td><td><span style="color:#f44336;background:rgba(244,67,54,0.15);padding:3px 10px;border-radius:12px;font-size:0.75em;">مصروف</span></td><td style="color:#f44336;font-weight:600;">−4,500</td></tr>
+                            <tr><td>22/01</td><td>دفعة نظام شمسي</td><td><span style="color:#4caf50;background:rgba(76,175,80,0.15);padding:3px 10px;border-radius:12px;font-size:0.75em;">مستلمة</span></td><td style="color:#4caf50;font-weight:600;">+25,000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== NOTES ==================== -->
+        <section id="page-notes" class="page-section">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2><i class="fas fa-lightbulb" style="color:var(--warning)"></i> الملاحظات الذكية</h2>
+                </div>
+                <button class="btn btn-warning btn-sm" onclick="addNote()"><i class="fas fa-plus"></i> إضافة</button>
+            </div>
+
+            <div class="smart-notes">
+                <div class="panel-header" style="border:none;padding:0;margin-bottom:14px;">
+                    <h3 class="panel-title"><i class="fas fa-robot" style="color:var(--secondary)"></i> تنبيهات AI</h3>
+                </div>
+                <ul class="notes-list" id="notesList">
+                    <li class="note-item">
+                        <span class="note-icon" style="color:var(--warning)">⚠️</span>
+                        <div class="note-text">
+                            <strong>مشروع فيلا أحمد متأخر!</strong>
+                            <p style="margin-top:4px;font-size:0.78em;">التقدم 65% وكان يجب 80%. سرّع في التمديدات.</p>
+                        </div>
+                    </li>
+                    <li class="note-item">
+                        <span class="note-icon" style="color:var(--success)">✅</span>
+                        <div class="note-text">
+                            <strong>اقتراح توفير</strong>
+                            <p style="margin-top:4px;font-size:0.78em;">يمكن توفير 15% على الكابلات ببدائل موثوقة.</p>
+                        </div>
+                    </li>
+                    <li class="note-item">
+                        <span class="note-icon" style="color:var(--info)">💡</span>
+                        <div class="note-text">
+                            <strong>تذكير صيانة</strong>
+                            <p style="margin-top:4px;font-size:0.78em;">حان صيانة نظام شركة النور (6 أشهر).</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel" style="margin-top:16px;">
+                <div class="panel-header">
+                    <h3 class="panel-title"><i class="fas fa-sticky-note" style="color:var(--primary)"></i> ملاحظاتي</h3>
+                </div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="text" id="userNoteInput" class="form-input" placeholder="اكتب ملاحظتك..." style="flex:1;">
+                    <button class="btn btn-primary btn-sm" onclick="saveNote()">حفظ</button>
+                </div>
+                <div id="userNotesContainer"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">عنوان</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Init Background
+        function initBg() {
+            const bg = document.getElementById('bgAnimation');
+            for(let i=0;i<6;i++){
+                const l=document.createElement('div');
+                l.className='circuit-line';
+                l.style.top=Math.random()*100+'%';
+                l.style.left=Math.random()*100+'%';
+                l.style.width=(Math.random()*25+10)+'%';
+                l.style.animationDelay=Math.random()*4+'s';
+                bg.appendChild(l);
+            }
+        }
+        initBg();
+
+        // Register SW
+        if('serviceWorker' in navigator){
+            window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js');});
+        }
+
+        // Page Navigation
+        function showPage(id){
+            document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active'));
+            document.getElementById('page-'+id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>{
+                n.classList.remove('active');
+                if(n.dataset.page===id)n.classList.add('active');
+            });
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar(){
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Add to Canvas
+        function addToCanvas(icon,name){
+            const c=document.getElementById('canvasArea');
+            c.innerHTML=`<div style="padding:20px;text-align:center;"><i class="fas fa-check-circle" style="font-size:2.5em;color:#4caf50;margin-bottom:10px;display:block"></i><h3 style="color:white;margin-bottom:8px">تمت الإضافة!</h3><p style="color:var(--text-secondary);font-size:0.85em">تم إضافة ${name} (${icon})</p><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="resetCanvas()">إضافة المزيد</button></div>`;
+            showToast('تم إضافة '+name,'success');
+        }
+
+        function resetCanvas(){
+            document.getElementById('canvasArea').innerHTML='<div><i class="fas fa-mouse-pointer" style="font-size:3em;margin-bottom:12px;opacity:0.3;display:block"></i><p>اضغط على أي رمز لإضافته هنا</p></div>';
+        }
+
+        // Analysis
+        function handleAnalysisUpload(e){
+            const f=e.target.files[0];
+            if(f){
+                const r=new FileReader();
+                r.onload=function(ev){
+                    e.target.parentElement.innerHTML='<img src="'+ev.target.result+'" style="max-width:100%;max-height:250px;object-fit:contain;border-radius:10px;" alt="plan">';
+                    document.getElementById('analysisResults').style.display='block';
+                };
+                r.readAsDataURL(f);
+            }
+        }
+
+        function runAnalysis(){
+            showToast('🤖 جاري التحليل...','info');
+            setTimeout(()=>showToast('✅ اكتمل التحليل! 87%','success'),2000);
+        }
+
+        // Connection Type
+        function selectConn(el){
+            document.querySelectorAll('.conn-type').forEach(c=>c.classList.remove('active'));
+            el.classList.add('active');
+            showToast('تم اختيار: '+el.querySelector('span').textContent,'info');
+        }
+
+        // Brand Select
+        function selectBrand(el){
+            document.querySelectorAll('.brand-chip').forEach(b=>b.classList.remove('active'));
+            el.classList.add('active');
+            showToast('تم اختيار: '+el.textContent,'purple');
+        }
+
+        // Calculate Points
+        function calcTotal(){
+            const price=parseFloat(document.getElementById('pointPrice').value)||10;
+            const pts=[1,1,1,5,5,5,2];
+            let total=0,tp=0;
+            for(let i=1;i<=7;i++){
+                const q=parseInt(document.querySelector('#page-points tr:nth-child('+i+') input').value)||0;
+                const p=q*pts[i-1];
+                total+=p;
+                tp+=p*price;
+                document.getElementById('p'+i).textContent=p;
+                document.getElementById('pr'+i).textContent=p*price.toLocaleString()+' ر.س';
+            }
+            document.getElementById('tp').textContent=total;
+            document.getElementById('tpr').textContent=tp.toLocaleString()+' ر.س';
+            document.getElementById('grandTotal').textContent=tp.toLocaleString();
+        }
+
+        // Filter Projects
+        function filterProj(t){showToast('تصفية: '+t,'info');}
+
+        // Notes
+        function addNote(){
+            const n=prompt('ملاحظتك:');
+            if(n&&n.trim()){
+                const li=document.createElement('li');
+                li.className='note-item';
+                li.innerHTML='<span class="note-icon" style="color:var(--primary)">📝</span><div class="note-text"><strong>'+n+'</strong><p style="margin-top:4px;font-size:0.75em;color:var(--text-secondary);">الآن</p></div>';
+                document.getElementById('notesList').insertBefore(li,document.getElementById('notesList').firstChild);
+                showToast('تمت الإضافة','success');
+            }
+        }
+
+        function saveNote(){
+            const input=document.getElementById('userNoteInput');
+            if(input.value.trim()){
+                const div=document.createElement('div');
+                div.style.cssText='background:rgba(255,255,255,0.05);padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;';
+                div.innerHTML='<div><strong>'+input.value+'</strong><p style="font-size:0.75em;color:var(--text-secondary);margin-top:3px;">الآن</p></div><button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>';
+                document.getElementById('userNotesContainer').prepend(div);
+                input.value='';
+                showToast('تم الحفظ','success');
+            }
+        }
+
+        // Modal
+        function openModal(type){
+            const ov=document.getElementById('modalOverlay');
+            const title=document.getElementById('modalTitle');
+            const content=document.getElementById('modalContent');
+
+            if(type==='newProject'){
+                title.textContent='📋 مشروع جديد';
+                content.innerHTML='<div class="form-group"><label class="form-label">اسم المشروع</label><input type="text" class="form-input" placeholder="اسم المشروع"></div><div class="form-group"><label class="form-label">العميل</label><input type="text" class="form-input" placeholder="اسم العميل"></div><div class="form-group"><label class="form-label">النوع</label><select class="form-select"><option>كهرباء منزلية</option><option>طاقة شمسية</option><option>صيانة</option></select></div><div class="form-group"><label class="form-label">ملاحظات</label><textarea class="form-textarea" placeholder="ملاحظات..."></textarea></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;"><button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button><button class="btn btn-success btn-sm" onclick="saveModal()">حفظ</button></div>';
+            } else if(type==='addExpense'){
+                title.textContent='💸 إضافة مصروف';
+                content.innerHTML='<div class="form-group"><label class="form-label">البيان</label><input type="text" class="form-input" placeholder="مثال: شراء مواد"></div><div class="form-group"><label class="form-label">الفئة</label><select class="form-select"><option>مواد</option><option>عمالة</option><option>نقل</option><option>أخرى</option></select></div><div class="form-group"><label class="form-label">المبلغ (ر.س)</label><input type="number" class="form-input" placeholder="0.00"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;"><button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button><button class="btn btn-success btn-sm" onclick="saveModal()">حفظ</button></div>';
+            }
+            ov.classList.add('show');
+        }
+
+        function closeModal(e){
+            if(!e||e.target===e.currentTarget)document.getElementById('modalOverlay').classList.remove('show');
+        }
+
+        function saveModal(){
+            showToast('✅ تم الحفظ بنجاح!','success');
+            closeModal();
+        }
+
+        // Toast
+        function showToast(msg,type='info'){
+            const colors={success:'#4caf50',danger:'#f44336',warning:'#ffc107',info:'#2196f3',purple:'#9c27b0'};
+            const t=document.getElementById('toast');
+            t.textContent=msg;
+            t.style.background=colors[type]||colors.info;
+            t.classList.add('show');
+            setTimeout(()=>t.classList.remove('show'),2800);
+        }
+
+        // Keyboard
+        document.addEventListener('keydown',e=>{
+            if(e.key==='Escape')closeModal();
+        });
+
+        // Init calc
+        calcTotal();
+    </script>
+</body>
+</html>
